@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FS_Project.API.Data;
 using FS_Project.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,45 +13,25 @@ namespace FS_Project.API.Controllers
     [Route("api/[controller]")]
     public class EventoController : ControllerBase
     {
-        public IEnumerable<Evento> _eventos = new Evento[]
-        {
-            new Evento()
-                {
-                    EventoId = 1,
-                    Tema = "Full Stack Udemy",
-                    Local = "Lisboa",
-                    Lote = "6A",
-                    NumPessoas = 2,
-                    DataEvento = DateTime.Now.AddDays(2).ToString(),
-                    ImagemURL = "foto.png"
-                },
-                new Evento()
-                {
-                    EventoId = 2,
-                    Tema = "Full Stack Udemy 2",
-                    Local = "Lisboa",
-                    Lote = "6B",
-                    NumPessoas = 1,
-                    DataEvento = DateTime.Now.AddDays(3).ToString(),
-                    ImagemURL = "imagem.png"
-                }
-        };
+        private readonly DataContext _context;
 
-        public EventoController()
+        public EventoController(DataContext context)
         {
+            _context = context;
             
         }
 
         [HttpGet]
         public IEnumerable<Evento> Get()
         {
-            return _eventos;
+            return _context.Eventos;
         }
 
         [HttpGet("{id}")]
-        public IEnumerable<Evento> GetbyID(int id)
+        public Evento GetbyID(int id)
         {
-            return _eventos.Where(evento => evento.EventoId == id);
+            return _context.Eventos.FirstOrDefault(
+                evento => evento.EventoId == id);
         }
 
         [HttpPost]
