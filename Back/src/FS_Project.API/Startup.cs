@@ -32,6 +32,7 @@ namespace FS_Project.API
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
             services.AddControllers();
+            services.AddCors();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FS_Project.API", Version = "v1" });
@@ -53,6 +54,12 @@ namespace FS_Project.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(
+                cors => cors.AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin()
+            );
 
             app.UseEndpoints(endpoints =>
             {
